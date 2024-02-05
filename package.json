@@ -1,0 +1,19 @@
+{
+  "name": "cypress-projects",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "cypress:open:chrome": "npx cypress run -b chrome --headed",
+    "cypress:run:chrome": "npx cypress run -b chrome",
+    "cypress:run:chrome:loginUsers": "npx cypress run -b chrome --headed --spec cypress/e2e/loginUsers.cy.js",
+    "cypress:run:chrome:hom2": "npx cypress run -b chrome --headed --spec cypress/e2e/homework2/homework2.cy.js",
+    "cypress:run:chrome:hom3": "npx cypress run -b chrome --headed --spec cypress/e2e/homework3/pageObjectLoginUser.cy.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "cypress": "^13.6.2"
+  }
+}

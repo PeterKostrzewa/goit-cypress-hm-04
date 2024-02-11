@@ -82,20 +82,83 @@ describe("httpbin tests", () => {
 
 //6. Niestandardowy nagłówek - Dodaj niestandardowy nagłówek:
 
-it("Should send a request with a custom header", () => {
-  const customHeader = "X-Custom-Header: custom-value";
+it('Should send a request with a custom header', () => {
+    const customHeader = 'X-Custom-Header: custom-value';
+    cy.request({
+      method: 'GET',
+      url: 'https://httpbin.org/headers',
+      headers: {
+        'X-Custom-Header': 'custom-value',
+      },
+    }).then(response => {
+          
+          expect(response.requestHeaders['X-Custom-Header']).to.include('custom-value');
+        });
+      });
 
-  cy.request({
-    method: "GET",
-    url: "https://httpbin.org/headers",
-    timeout: 10000,
-    headers: {
-      "X-Custom-Header": "custom-value",
-    },
-  })
-    .its("headers")
-    .invoke("toString") // Konwertuj nagłówki na string
-    .should("include", customHeader);
-});
+// 7. Sprawdzenie nagłówka User-Agent:
+
+describe("GET - API User-Agent", () => {
+    const request = {
+      method: "GET",
+      url: "https://httpbin.org/get",
+      headers: {
+        "User-Agent": "My-test-user-agent",
+      },
+      failOnStatusCode: false,
+    };
+  
+    it("response and user Agent should be correct", () => {
+      cy.request(request).then((response) => {
+        const currentStatus = response.status;
+        const expectedStatus = 200;
+
+        const currentUserAgentValue = response.requestHeaders['User-Agent']
+
+        assert.equal('My-test-user-agent', currentUserAgentValue);
+        assert.equal(expectedStatus, currentStatus);
+
+        cy.log(JSON.stringify(response.requestHeaders));
+      });
+    });
+  });
+
+ // 8. Sprawdzenie czasu odpowiedzi:
+ 
+ describe('GET - Check duration', () => {
+    const request = {
+        method: 'GET',
+        url: "https://httpbin.org/get",
+        failOnStatusCode: false,
+    }
+
+    it('test duration', () => {
+        cy.request(request).then(response => {
+           assert.isTrue(response.duration <= 1000) 
+        });
+    });
+ });
+
+ //9. Sprawdzenie zawartości odpowiedzi JSON:
+
+ it('Should check JSON response content', () => {
+    cy.request('GET', 'https://httpbin.org/json')
+      .its('body')
+      .should('have.property', 'slideshow');
+  });
+
+// 10. Wysyłanie żądania z nagłówkiem "Accept":
+
+  it('Should send request with Accept header', () => {
+    cy.request('GET', 'https://httpbin.org/headers', {
+      headers: {
+        Accept: 'application/json',
+      },
+    })
+      .its('headers.Accept')
+      .should('not.exist');
+  });
 
 
+
+    

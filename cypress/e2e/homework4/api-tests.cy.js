@@ -64,10 +64,16 @@ describe.only('httpbin tests', () => {
   
     it('test that header set correctly', () => {
       cy.request(request).then(response => {
-        assert.equal(200, response.status);
-        assert.equal("customValue", response.requestHeaders.customHeader);
-        cy.log(JSON.stringify(response.requestHeaders.customHeader));
-        //dlaczego nie zwraca prawidłowych wartości headers?
+        const currentStatus = response.status;
+        const expectedStatus = 200;
+
+        const currentHeaderValue = response.requestHeaders.customHeader;
+        
+        assert.equal('customValue', currentHeaderValue);
+        assert.equal(expectedStatus, currentStatus);
+
+        cy.log(response.requestHeaders);
+        cy.log(JSON.stringify(response.requestHeaders))
       });
     });
   });
